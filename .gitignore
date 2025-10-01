@@ -5,3 +5,4 @@
 *.in
 *.out
 *.cpp__test
+*.py__test
