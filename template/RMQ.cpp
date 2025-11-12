@@ -55,7 +55,7 @@ struct RMQ {
                 stk[j] = s;
             }
         }
-    } 
+    }
     T operator()(int l, int r) {
         if (l / B != (r - 1) / B) {
             T ans = std::min(suf[l], pre[r - 1], cmp);
