@@ -42,9 +42,30 @@ auto factor(i64 n) {
     return d;
 }
 
-auto divisor(i64 n) {
-    auto d = std::move(factor(n));
+auto merge(const vector<pair<i64, int>> &a, const vector<pair<i64, int>> &b) {
+    vector<pair<i64, int>> c;
+    size_t i = 0, j = 0;
+    while (i < a.size() && j < b.size()) {
+        if (a[i].first == b[j].first) {
+            c.push_back({a[i].first, a[i].second + b[j].second});
+            i++;
+            j++;
+        } else if (a[i].first < b[j].first) {
+            c.push_back(a[i++]);
+        } else {
+            c.push_back(b[j++]);
+        }
+    }
+    while (i < a.size()) {
+        c.push_back(a[i++]);
+    }
+    while (j < b.size()) {
+        c.push_back(b[j++]);
+    }
+    return c;
+}
 
+auto divisor(const vector<pair<i64, int>> &d) {
     int sz = static_cast<int>(d.size());
     vector<i64> res;
 
@@ -61,8 +82,6 @@ auto divisor(i64 n) {
     };
 
     dfs(0, 0, 1);
-
-    sort(res.begin(), res.end());
 
     return res;
 };
