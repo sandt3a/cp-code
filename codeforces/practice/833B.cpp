@@ -204,7 +204,7 @@ void solve()
     }
 
     vector<int> pre(n);
-    vector<int> tmp(n + 1, -1);
+    vector<int> tmp(n + 1, 0);
     for (int i = 0; i < n; i++) {
         int x = a[i];
         pre[i] = tmp[x];
@@ -221,7 +221,7 @@ void solve()
         auto ndp = dp;
         LazySegmentTree<Info, Tag> seg(pack(dp));
         for (int i = 0; i < n; i++) {
-            seg.rangeApply(pre[i] + 1, i + 1, {1});
+            seg.rangeApply(pre[i], i, {1});
             ndp[i] = seg.rangeQuery(0, i).x;
         }
         dp = ndp;
