@@ -1,67 +1,15 @@
-# Executables
-*.exe
-[0-9][0-9][0-9][0-9][A-Za-z]
-[0-9][0-9][0-9][A-Za-z]
-[0-9][0-9][A-Za-z]
-[0-9][A-Za-z]
-a
-b
-c
-d
-e
-f
-g
-h
-i
-j
-k
-l
-m
-n
-o
-p
-q
-r
-s
-t
-u
-v
-w
-x
-y
-z
-aa
-bb
-cc
-dd
-ee
-ff
-gg
-hh
-ii
-jj
-kk
-ll
-mm
-nn
-oo
-pp
-qq
-rr
-ss
-tt
-uu
-vv
-ww
-xx
-yy
-zz
+# 白名单模式：默认忽略一切，只放行源码。
+# 这样任何编译产物（a、test、increasing-array……）无论叫什么名字都不会被 git 看到。
+*
+!*/
 
-# vim swap file
-*.swp
-
-# samples
-*.in
-*.out
-*.cpp__test
-*.py__test
+# 需要跟踪的文件类型
+!.gitignore
+!LICENSE
+!*.cpp
+!*.c
+!*.py
+!*.sh
+!*.s
+!*.md
+!*.txt
