@@ -6,6 +6,9 @@ using u64 = unsigned long long;
 
 void solve()
 {
+    int n;
+    cin >> n;
+
 }
 
 int main()
@@ -19,3 +22,4 @@ int main()
     }
     return 0;
 }
+
