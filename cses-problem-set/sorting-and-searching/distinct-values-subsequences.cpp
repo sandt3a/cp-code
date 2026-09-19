@@ -1,10 +1,14 @@
+#include <bits/stdc++.h>
+#include <cassert>
+using namespace std;
+
 using i64 = long long;
 using u64 = unsigned long long;
 using u32 = unsigned;
- 
+
 using u128 = unsigned __int128;
 using i128 = __int128;
- 
+
 template<class T>
 constexpr T power(T a, u64 b, T res = 1) {
     for (; b != 0; b /= 2, a *= a) {
@@ -14,19 +18,19 @@ constexpr T power(T a, u64 b, T res = 1) {
     }
     return res;
 }
- 
+
 template<u32 P>
 constexpr u32 mulMod(u32 a, u32 b) {
-    return u64(a) * b % P;
+    return u32(u64(a) * b % P);
 }
- 
+
 template<u64 P>
 constexpr u64 mulMod(u64 a, u64 b) {
     u64 res = a * b - u64(1.L * a * b / P - 0.5L) * P;
     res %= P;
     return res;
 }
- 
+
 constexpr i64 safeMod(i64 x, i64 m) {
     x %= m;
     if (x < 0) {
@@ -34,7 +38,7 @@ constexpr i64 safeMod(i64 x, i64 m) {
     }
     return x;
 }
- 
+
 constexpr std::pair<i64, i64> invGcd(i64 a, i64 b) {
     a = safeMod(a, b);
     if (a == 0) {
@@ -43,7 +47,7 @@ constexpr std::pair<i64, i64> invGcd(i64 a, i64 b) {
     
     i64 s = b, t = a;
     i64 m0 = 0, m1 = 1;
- 
+
     while (t) {
         i64 u = s / t;
         s -= t * u;
@@ -59,7 +63,7 @@ constexpr std::pair<i64, i64> invGcd(i64 a, i64 b) {
     
     return {s, m0};
 }
- 
+
 template<std::unsigned_integral U, U P>
 struct ModIntBase {
 public:
@@ -153,20 +157,20 @@ public:
 private:
     U x;
 };
- 
+
 template<u32 P>
 using ModInt = ModIntBase<u32, P>;
 template<u64 P>
 using ModInt64 = ModIntBase<u64, P>;
- 
+
 struct Barrett {
 public:
     Barrett(u32 m_) : m(m_), im((u64)(-1) / m_ + 1) {}
- 
+
     constexpr u32 mod() const {
         return m;
     }
- 
+
     constexpr u32 mul(u32 a, u32 b) const {
         u64 z = a;
         z *= b;
@@ -179,12 +183,12 @@ public:
         }
         return v;
     }
- 
+
 private:
     u32 m;
     u64 im;
 };
- 
+
 template<u32 Id>
 struct DynModInt {
 public:
@@ -284,11 +288,11 @@ private:
     u32 x;
     static Barrett bt;
 };
- 
+
 template<u32 Id>
-Barrett DynModInt<Id>::bt = 998244353;
- 
-using Z = ModInt<998244353>;
+Barrett DynModInt<Id>::bt = 1000000007;
+
+using Z = ModInt<1000000007>;
 
 struct Comb {
     int n;
@@ -335,3 +339,38 @@ struct Comb {
         return fac(n) * invfac(m) * invfac(n - m);
     }
 } comb;
+
+void solve()
+{
+    int n;
+    cin >> n;
+    vector<int> a(n);
+
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+
+    map<int, int> mp;
+    for (int i = 0; i < n; i++) {
+        mp[a[i]]++;
+    }
+
+    Z ans = 1;
+    for (auto [k, v]: mp) {
+        ans *= (v + 1);
+    }
+
+    cout << ans - 1 << endl;
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int t = 1;
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
