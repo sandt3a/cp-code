@@ -101,10 +101,10 @@ void solve()
     }
 
     for (int i = 0; i < n; i++) {
-        cout << ex[i] << " \n"[i == n - 1];
+        cout << !!ex[i] << " \n"[i == n - 1];
     }
     for (int i = 0; i < n; i++) {
-        cout << in[i] << " \n"[i == n - 1];
+        cout << !!in[i] << " \n"[i == n - 1];
     }
 }
 
