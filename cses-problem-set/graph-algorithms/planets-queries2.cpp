@@ -5,21 +5,38 @@ using namespace std;
 using i64 = long long;
 using u64 = unsigned long long;
 
+template <class F>
+struct y_combinator {
+    F f;
+
+    explicit y_combinator(F f) : f(std::move(f)) {}
+
+    template <class... Args>
+    decltype(auto) operator()(Args&&... args) {
+        return f(*this, std::forward<Args>(args)...);
+    }
+};
+
+template <class F>
+auto make_y(F&& f) {
+    return y_combinator<std::decay_t<F>>(std::forward<F>(f));
+}
+
 void solve()
 {
     int n, q;
     cin >> n >> q;
 
     vector<int> to(n);
-    vector<vector<int>> from(n);
     for (int i = 0; i < n; i++) {
         cin >> to[i];
-        from[to[i]].push_back(i);
         to[i]--;
     }
 
     vector<int> in(n);
+    vector<vector<int>> from(n);
     for (int i = 0; i < n; i++) {
+        from[to[i]].push_back(i);
         in[to[i]]++;
     }
     queue<int> que;
@@ -39,21 +56,37 @@ void solve()
     }
 
     vector<int> dep(n, -1);
-    vector<int> col(n, -1);
-    auto dfs = [&](this auto&& self, int x, int d = 0, int c = 0) {
+    vector<int> col(n);
+    vector<int> tin(n), tout(n);
+    int dfs_clock = 0;
+
+    auto dfs = make_y([&](auto &&self, int x, int d, int c) -> void {
         dep[x] = d;
         col[x] = c;
+        tin[x] = dfs_clock++;
         for (auto y: from[x]) {
             if (in[y]) continue;
-            dfs(y, d + 1);
+            self(y, d + 1, c);
         }
-    };
+        tout[x] = dfs_clock++;
+    });
 
-    int tot = 0;
+    int tot = 0, cid = 0;
+    vector<int> rt(n), cyc(n, -1), clen;
     for (int i = 0; i < n; i++) {
-        if (vis[i]) continue;
+        if (vis[i] || col[i]) continue;
 
-        dfs(i, 0, ++tot);
+        int x = i;
+        int len = 0;
+        do {
+            rt[tot] = x;
+            dfs(x, 0, tot++);
+            cyc[x] = cid;
+            x = to[x];
+            len++;
+        } while (x != i);
+        clen.push_back(len);
+        cid++;
     }
 
     while (q--) {
@@ -62,11 +95,20 @@ void solve()
         a--;
         b--;
 
-        if (col[b] == -1) {
-            cout << dep[a] + 
-        }
-        if (col[a] == -1 || col[a] != col[b]) {
-            cout << "-1\n";
+        if (in[b] == 0) {
+            if (tin[b] <= tin[a] && tout[a] <= tout[b]) {
+                cout << dep[a] - dep[b] << "\n";
+            } else {
+                cout << -1 << "\n";
+            }
+        } else {
+            int x = rt[col[a]];
+            if (cyc[x] == cyc[b]) {
+                int L = clen[cyc[x]];
+                cout << dep[a] + (col[b] - col[x] + L) % L << endl;
+            } else {
+                cout << -1 << "\n";
+            }
         }
     }
 }
@@ -76,8 +118,7 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int t;
-    cin >> t;
+    int t = 1;
     while (t--) {
         solve();
     }
