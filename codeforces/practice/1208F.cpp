@@ -7,38 +7,6 @@ using u64 = unsigned long long;
 
 constexpr int S = 21;
 
-struct Trie {
-    int tot;
-    vector<array<int, 4>> a;
-
-    Trie() {
-        init();
-    }
-
-    void init() {
-        tot = 0;
-        a.assign(1, {0, 0, -1, -1});
-    }
-
-    int new_node(int idx) {
-        ++tot;
-        a.push_back({0, 0, -1, -1});
-    }
-    
-    void insert(int x, int idx) {
-        int cur = 0;
-        for (int i = S - 1; i >= 0; i--) {
-            auto node = a[cur];
-            int d = x >> i & 1;
-            if (!node[d]) {
-                node[d] = new_node(idx);
-            } else {
-                node[d][3] = max(node[d][3], idx);
-            }
-        }
-    }
-};
-
 void solve()
 {
     int n;
@@ -49,9 +17,34 @@ void solve()
         cin >> a[i];
     }
 
+    vector<int> ok(1 << S);
+
+    auto insert = [&](this auto&& self, int x, int idx) {
+        if (ok[x] == 2) return;
+        ok[x]++;
+        for (int i = idx; i < S; i++) {
+            if (x >> i & 1) {
+                self(x ^ (1 << i), i);
+            }
+        }
+    };
+
+    int ans = 0;
     for (int i = n - 1; i >= 0; i--) {
-        trie.insert(a[i], i);
+        int mask = 0;
+        for (int j = S - 1; j >= 0; j--) {
+            if (a[i] >> j & 1) continue;
+            if (ok[mask | 1 << j] >= 2) {
+                mask |= 1 << j;
+                ans = max(ans, a[i] + mask);
+            }
+        }
+        if (ok[0] >= 2) {
+            ans = max(ans, a[i]);
+        }
+        insert(a[i], 0);
     }
+    cout << ans << "\n";
 }
 
 int main()
