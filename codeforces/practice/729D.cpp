@@ -29,7 +29,7 @@ void solve()
         }
     }
 
-    int m = static_cast<int>(lens.size());
+    int m = ssize(lens);
     vector<int> ord(m);
     iota(ord.begin(), ord.end(), 0);
     sort(ord.begin(), ord.end(), [&](int x, int y) {

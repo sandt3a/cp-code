@@ -27,9 +27,9 @@ void solve()
         diag2[x + y] = c;
     };
 
-    auto dfs = [&](auto &&self, int x, int y, int todo = 8) -> void {
+    auto dfs = [&](this auto &&self, int x, int y, int todo = 8) -> void {
         if (y == n) {
-            self(self, x + 1, 0, todo);
+            self(x + 1, 0, todo);
             return;
         }
         if (x == n) {
@@ -37,16 +37,16 @@ void solve()
             return;
         }
 
-        self(self, x, y + 1, todo);
+        self(x, y + 1, todo);
 
         if (board[x][y] == '.' && !row[x] && !col[y] && !diag1[x - y + n] && !diag2[x + y]) {
             mark(x, y, 1);
-            self(self, x, y + 1, todo - 1);
+            self(x, y + 1, todo - 1);
             mark(x, y, 0);
         }
     };
 
-    dfs(dfs, 0, 0);
+    dfs(0, 0);
 
     cout << ans << endl;
 }
